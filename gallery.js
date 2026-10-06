@@ -11,6 +11,7 @@ const VERSIONS = [
   { id: 'v09', title: 'Sun and moon', note: 'Adds a light/dark toggle in the top-right nav, dark by default. Going to dark, a crescent moon rises from the toggle and night spreads across the page with twinkling stars. Going to light, a sun with turning rays floods the page with warm light. Press T to toggle too.' },
   { id: 'v10', title: 'Command palette', note: 'Press ⌘K, Ctrl+K or / to open a Spotlight-style palette: fuzzy-search to jump to any section, copy the email, open links, switch theme, replay the journey or tip out the pebbles.' },
   { id: 'v11', title: 'Pinned experience story', note: 'Allthenticate becomes an Apple-style pinned scroll story. The three highlights light up in turn beside animated diagrams for the testing framework, BLE device onboarding and the UI/UX overhaul.' },
+  { id: 'v12', title: 'Case-study sheets', note: 'Each project tile now grows into a case-study sheet with an animated header illustration, what it does, how it was built and the stack, with prev/next arrows. Projects are searchable in the command palette too.' },
 ];
 
 (function () {
