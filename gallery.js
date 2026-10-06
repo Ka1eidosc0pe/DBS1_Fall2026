@@ -23,6 +23,7 @@ const VERSIONS = [
   { id: 'v21', title: 'The animated style', note: 'The big restyle: the page becomes an illustrated world. Firewatch-style layered landscapes with a lookout tower are the base. Spider-Verse halftone, misregistered lettering and ink-panel comics add energy, and Arcane-like hextech glows mark interactive parts. It comes in dusk-to-night and golden-afternoon themes.' },
   { id: 'v22', title: 'Open to work', note: 'A status pill above the greeting reads Open to SWE roles · Chicago, with a softly pulsing green dot, and clicking it opens an email. In the animated style it becomes a tilted comic caption sticker.' },
   { id: 'v23', title: 'Back to top', note: 'A back-to-top button fades in after you scroll, with a ring that fills as you read down the page. In the animated style it pops in as a comic UP! starburst.' },
+  { id: 'v24', title: 'Ink-drawn underlines', note: 'Nav and text links get underlines that draw in on hover. In the Apple style it is a hairline sweeping in from the left. In the animated style it is a rough gold brush stroke painted on in steps, which also marks the section you are in.' },
 ];
 
 (function () {
