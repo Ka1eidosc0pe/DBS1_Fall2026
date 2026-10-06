@@ -7,6 +7,7 @@ const VERSIONS = [
   { id: 'v05', title: 'Phoenix and lion', note: 'Education cards get original animated emblems. UChicago has a phoenix rising from flickering flames; on hover the flames flare, embers drift up and the wings beat. NTU has a regal lion whose mane blooms in, and it roars on first view and on every hover.' },
   { id: 'v06', title: 'School-colored cards', note: 'The education cards are now full maroon (UChicago) and navy (NTU), with the phoenix and lion as large background illustrations that stay clear of the text. The animations are unchanged. Also fixed the "g" in "Together." being clipped at the bottom.' },
   { id: 'v07', title: 'Pouch and pebbles', note: 'The skills list becomes a tactile toolkit: a stitched canvas pouch with four labelled pockets. Tap one and its skill pebbles tip into a tray, bouncing and settling with real physics. Pebbles can be dragged and tossed, and the fluent languages are bigger stones.' },
+  { id: 'v08', title: 'Lights out', note: 'Dark mode only, in the style of Apple\u2019s dark product pages: black and near-black sections, off-white type, a brighter link blue. Also a charcoal canvas pouch on dark felt, softened day-sky city cards, and a glow behind DoF.me. All colors now come from theme tokens, ready for a toggle.' },
 ];
 
 (function () {
