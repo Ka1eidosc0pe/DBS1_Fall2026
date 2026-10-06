@@ -14,6 +14,7 @@ const VERSIONS = [
   { id: 'v12', title: 'Case-study sheets', note: 'Each project tile now grows into a case-study sheet with an animated header illustration, what it does, how it was built and the stack, with prev/next arrows. Projects are searchable in the command palette too.' },
   { id: 'v13', title: 'DoF.me data flow', note: 'An animated architecture diagram in the DoF.me section: data packets travel from the provider layer through normalization to canonical records and persistence, then branch into the AI narrative and gameplay. Hover a node for details.' },
   { id: 'v14', title: '30-second view', note: 'A one-screen résumé overlay for busy recruiters, opened from the hero or the command palette. The same content prints as a clean one-page US Letter résumé via Download PDF or Cmd+P.' },
+  { id: 'v15', title: 'Micro-interactions', note: 'Magnetic CTAs, 3D tilt with a glare highlight on cards, a subtle cursor spotlight in dark mode, a scroll-progress bar and a section-aware nav.' },
 ];
 
 (function () {
