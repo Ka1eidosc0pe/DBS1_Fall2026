@@ -3,6 +3,7 @@ const VERSIONS = [
   { id: 'v01', title: 'Apple-inspired foundation', note: 'First iteration. Clean, product-page elegance inspired by Apple: translucent sticky nav, oversized tight headlines, spec-style stats, a dark featured-project section, rounded tiles, and subtle scroll reveals. (GPA later redacted, with a wink.)' },
   { id: 'v02', title: 'A more human headline', note: 'New hero line where "artificial" is struck through and replaced by "human". GPA removed; the stats now lead with five cities called home. LinkedIn and GitHub added to the contact section and footer.' },
   { id: 'v03', title: 'Five cities, one journey', note: 'New animated flight path from Mumbai to Singapore, Boston, Houston and Chicago. Each city card shows its live local time over a sky that matches the hour. Stats are now uniform, and the closing line adds a warm, letter-by-letter "Together."' },
+  { id: 'v04', title: 'Skylines and a long-haul joke', note: 'Each city card gets a translucent landmark silhouette: Sea Link, Marina Bay Sands, Boston steeples, a Houston rocket, Willis Tower and the Bean. Fixed the route turning blue ahead of the plane. Added a wink on the long Singapore to Boston leg. Cleaner cards with the sun and moon in a fixed spot.' },
 ];
 
 (function () {
