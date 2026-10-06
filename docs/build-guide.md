@@ -29,3 +29,9 @@ is about. Earlier versions are a historical record. Never edit them.
   don't make the page unusable on small screens either.
 - Pause offscreen animation loops (IntersectionObserver).
 - No console errors.
+
+## Deferred ideas (original v22–v25 plan, to revisit)
+- Apple ↔ Animated style toggle (paintbrush stroke in, glass squeegee wipe out)
+- Animated-style journey: scroll-driven flight across illustrated city panoramas
+- Opt-in synthesized sound design
+- Final cut: full sweep, 404 page, meta/SEO, gallery polish, mobile layouts
