@@ -16,6 +16,7 @@ const VERSIONS = [
   { id: 'v14', title: '30-second view', note: 'A one-screen résumé overlay for busy recruiters, opened from the hero or the command palette. The same content prints as a clean one-page US Letter résumé via Download PDF or Cmd+P.' },
   { id: 'v15', title: 'Micro-interactions', note: 'Magnetic CTAs, 3D tilt with a glare highlight on cards, a subtle cursor spotlight in dark mode, a scroll-progress bar and a section-aware nav.' },
   { id: 'v16', title: 'Polaroid hobby wall', note: 'Beyond work becomes six illustrated polaroids scattered like photos on a table. Drag them around, double-click to flip one over, or tidy them into a grid.' },
+  { id: 'v17', title: 'Multilingual hello', note: 'A greeting above the name morphs through the five languages Aditya speaks: Hello, नमस्ते, 你好, Hola, Bonjour. Hover pauses it and a click advances it.' },
 ];
 
 (function () {
