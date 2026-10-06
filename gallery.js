@@ -21,6 +21,7 @@ const VERSIONS = [
   { id: 'v19', title: 'Scroll-scrubbed hero', note: 'After the hero, an Apple-style pinned sequence scrubs through AI, Mobile, Full-stack and Security as you scroll. Each frame is a giant gradient word with its own subtle motif and a caption drawn from real work.' },
   { id: 'v20', title: 'Accessibility & performance', note: 'A polish pass with no redesign: skip link, labelled landmarks, a clean heading outline, consistent focus rings, high-contrast support and token contrast fixes. Animation loops now pause offscreen and in hidden tabs.' },
   { id: 'v21', title: 'The animated style', note: 'The big restyle: the page becomes an illustrated world. Firewatch-style layered landscapes with a lookout tower are the base. Spider-Verse halftone, misregistered lettering and ink-panel comics add energy, and Arcane-like hextech glows mark interactive parts. It comes in dusk-to-night and golden-afternoon themes.' },
+  { id: 'v22', title: 'Open to work', note: 'A status pill above the greeting reads Open to SWE roles · Chicago, with a softly pulsing green dot, and clicking it opens an email. In the animated style it becomes a tilted comic caption sticker.' },
 ];
 
 (function () {
