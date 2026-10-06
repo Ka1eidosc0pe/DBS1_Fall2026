@@ -2536,3 +2536,44 @@
     document.title = document.hidden ? away : original;
   });
 })();
+
+/* ---- v25: Apple <-> Animated style toggle (Apple is the default) ---- */
+(function () {
+  var btn = document.getElementById('styleBtn');
+  if (!btn || !window.siteStyle) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var busy = false;
+  function label() {
+    var animated = window.siteStyle.get() === 'animated';
+    var text = animated ? 'Switch to Apple style' : 'Switch to animated style';
+    btn.setAttribute('aria-pressed', String(animated));
+    btn.setAttribute('aria-label', text);
+    btn.title = text;
+  }
+  function apply(next) {
+    window.siteStyle.set(next);
+    // Layout-dependent modules (journey route, tray bounds, polaroids, pinned stages) re-measure on resize
+    window.dispatchEvent(new Event('resize'));
+  }
+  function toggle() {
+    if (busy) return;
+    var next = window.siteStyle.get() === 'animated' ? 'apple' : 'animated';
+    if (document.startViewTransition && !reduce.matches) {
+      busy = true;
+      var t = document.startViewTransition(function () { apply(next); });
+      t.finished.finally(function () { busy = false; });
+    } else apply(next);
+  }
+  btn.addEventListener('click', toggle);
+  document.addEventListener('stylechange', label);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 's' && e.key !== 'S') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    // Ignore while any dialog (palette, sheet, game, TL;DR) is actually showing
+    if (Array.prototype.some.call(document.querySelectorAll('[aria-modal="true"]'), function (d) { return d.getClientRects().length > 0; })) return;
+    toggle();
+  });
+  label();
+})();

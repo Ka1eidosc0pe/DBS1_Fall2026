@@ -1808,3 +1808,15 @@ html:not([data-style="animated"]) .nav-links a:hover,html:not([data-style="anima
 html[data-style="animated"] .nav-links a::after{left:0;right:0;width:auto;margin-left:0;border-radius:0;transform-origin:left;transform:scaleX(0);height:8px;bottom:-4px;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7.5C14 4.6 26 8.8 40 6.1S66 3.2 82 6.4 108 8.9 118 4.8L117 8.6C104 11.4 90 9.6 76 9.9S48 11.2 34 9.8 10 10.9 3 10.6Z' fill='%23000'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 7.5C14 4.6 26 8.8 40 6.1S66 3.2 82 6.4 108 8.9 118 4.8L117 8.6C104 11.4 90 9.6 76 9.9S48 11.2 34 9.8 10 10.9 3 10.6Z' fill='%23000'/%3E%3C/svg%3E") center/100% 100% no-repeat;transition:transform .24s steps(4)}
 html[data-style="animated"] .nav-links a:hover::after,html[data-style="animated"] .nav-links a:focus-visible::after,html[data-style="animated"] .nav-links a.active::after{transform:scaleX(1);opacity:1}
 @media (prefers-reduced-motion:reduce){html .nav-links a,html a.link{transition:none!important}html[data-style="animated"] .nav-links a::after{transition:none}}
+
+/* ===== v25: Apple <-> Animated style toggle ===== */
+.style-btn{flex:none;width:32px;height:32px;margin-left:12px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--text);display:inline-grid;place-items:center;cursor:pointer;transition:background .3s}
+.style-btn+.theme-btn{margin-left:6px}
+.style-btn:hover{background:color-mix(in srgb,var(--text) 10%,transparent)}
+.style-btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.style-btn svg{grid-area:1/1;width:19px;height:19px;transition:opacity .3s,transform .4s var(--ease)}
+.style-btn .sb-glass{opacity:0;transform:scale(.6) rotate(-30deg)}
+html[data-style="animated"] .style-btn .sb-brush{opacity:0;transform:scale(.6) rotate(30deg)}
+html[data-style="animated"] .style-btn .sb-glass{opacity:1;transform:none}
+html[data-style="animated"] .style-btn:hover{background:color-mix(in srgb,var(--hx-gold) 35%,transparent)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
