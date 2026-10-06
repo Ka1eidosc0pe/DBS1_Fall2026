@@ -24,7 +24,8 @@ is about. Earlier versions are a historical record. Never edit them.
 - Respect `prefers-reduced-motion` everywhere. Content must be readable without
   JS (gate JS-only states behind the `.js` class on `<html>`).
 - Keyboard accessible, visible focus rings, AA contrast in both themes.
-- Responsive: verify at about 1024px and 375px in the browser preview, and
-  check that nothing overflows horizontally.
+- Desktop first: build and verify at desktop widths (about 1024px and 1440px).
+  Mobile layouts are deferred to a later pass. Don't spend effort on them, but
+  don't make the page unusable on small screens either.
 - Pause offscreen animation loops (IntersectionObserver).
 - No console errors.
