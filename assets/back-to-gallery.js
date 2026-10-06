@@ -9,7 +9,7 @@
     '.btg{position:fixed;left:16px;bottom:16px;z-index:2147483647;display:inline-flex;align-items:center;gap:8px;' +
     'padding:10px 16px 10px 12px;border-radius:999px;font:500 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;' +
     'color:#fff;background:rgba(20,20,22,.78);-webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px);' +
-    'text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,.18);transition:transform .2s ease,background .2s ease}' +
+    'text-decoration:none;border:1px solid rgba(255,255,255,.16);box-shadow:0 4px 20px rgba(0,0,0,.18);transition:transform .2s ease,background .2s ease}' +
     '.btg:hover{transform:translateY(-1px);background:rgba(20,20,22,.92)}' +
     '.btg:focus-visible{outline:2px solid #0a84ff;outline-offset:3px}' +
     '.btg svg{width:14px;height:14px}' +
