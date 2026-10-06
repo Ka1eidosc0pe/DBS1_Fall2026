@@ -1,6 +1,7 @@
 // The only thing to edit when adding a version: append an entry here.
 const VERSIONS = [
   { id: 'v01', title: 'Apple-inspired foundation', note: 'First iteration. Clean, product-page elegance inspired by Apple: translucent sticky nav, oversized tight headlines, spec-style stats, a dark featured-project section, rounded tiles, and subtle scroll reveals.' },
+  { id: 'v02', title: 'A more human headline', note: 'New hero line where "artificial" is struck through and replaced by "human". GPA removed; the stats now lead with five cities called home. LinkedIn and GitHub added to the contact section and footer.' },
 ];
 
 (function () {
