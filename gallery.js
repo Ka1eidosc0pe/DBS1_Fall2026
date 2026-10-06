@@ -18,6 +18,7 @@ const VERSIONS = [
   { id: 'v16', title: 'Polaroid hobby wall', note: 'Beyond work becomes six illustrated polaroids scattered like photos on a table. Drag them around, double-click to flip one over, or tidy them into a grid.' },
   { id: 'v17', title: 'Multilingual hello', note: 'A greeting above the name morphs through the five languages Aditya speaks: Hello, नमस्ते, 你好, Hola, Bonjour. Hover pauses it and a click advances it.' },
   { id: 'v18', title: 'Keepy-uppy easter egg', note: 'Enter the Konami code, pick Play keepy-uppy in the command palette, or toss a pebble up three times to juggle a football. It has kick physics, spin, olé pops and confetti.' },
+  { id: 'v19', title: 'Scroll-scrubbed hero', note: 'After the hero, an Apple-style pinned sequence scrubs through AI, Mobile, Full-stack and Security as you scroll. Each frame is a giant gradient word with its own subtle motif and a caption drawn from real work.' },
 ];
 
 (function () {
