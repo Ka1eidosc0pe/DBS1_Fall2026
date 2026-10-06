@@ -12,6 +12,7 @@ const VERSIONS = [
   { id: 'v10', title: 'Command palette', note: 'Press ⌘K, Ctrl+K or / to open a Spotlight-style palette: fuzzy-search to jump to any section, copy the email, open links, switch theme, replay the journey or tip out the pebbles.' },
   { id: 'v11', title: 'Pinned experience story', note: 'Allthenticate becomes an Apple-style pinned scroll story. The three highlights light up in turn beside animated diagrams for the testing framework, BLE device onboarding and the UI/UX overhaul.' },
   { id: 'v12', title: 'Case-study sheets', note: 'Each project tile now grows into a case-study sheet with an animated header illustration, what it does, how it was built and the stack, with prev/next arrows. Projects are searchable in the command palette too.' },
+  { id: 'v13', title: 'DoF.me data flow', note: 'An animated architecture diagram in the DoF.me section: data packets travel from the provider layer through normalization to canonical records and persistence, then branch into the AI narrative and gameplay. Hover a node for details.' },
 ];
 
 (function () {
