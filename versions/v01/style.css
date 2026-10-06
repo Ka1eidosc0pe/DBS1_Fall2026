@@ -97,6 +97,11 @@ h3{letter-spacing:-.01em}
 .card .role{margin-top:0;color:var(--text)}
 .big-num{font-size:clamp(56px,7vw,80px);font-weight:700;letter-spacing:-.04em;line-height:1;margin-top:auto;padding-top:40px}
 .big-num span{font-size:17px;font-weight:400;letter-spacing:0;color:var(--sec);margin-left:8px}
+/* Redacted GPA: a declassified-document bar with a cheeky tooltip */
+.redacted{position:relative;display:inline-block;width:2.1em;height:.74em;vertical-align:-.02em;background:#1d1d1f;border-radius:.06em;transform:rotate(-1.2deg);cursor:help;outline:none}
+.redacted::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,6px) rotate(1.2deg);padding:7px 12px;border-radius:10px;background:#1d1d1f;color:#fff;font-size:14px;font-weight:500;letter-spacing:0;line-height:1;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s var(--ease)}
+.redacted:hover::after,.redacted:focus-visible::after{opacity:1;transform:translate(-50%,0) rotate(1.2deg)}
+.redacted:focus-visible{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--blue)}
 .note{margin-top:auto;padding-top:40px;font-size:17px;color:var(--sec)}
 
 /* Skills */
