@@ -1,0 +1,6 @@
+.claude
+docs
+README.md
+.DS_Store
+.env*
+.vercel
