@@ -1,17 +1,20 @@
 # Landing page content — Aditya Selvam
 
 Source of truth for every version. Copy is drawn from the resume; do not invent
-employers, dates, metrics, or links. Phone number is intentionally omitted from
-the public site.
+employers, dates, metrics, or links. Phone number and GPA are intentionally
+omitted from the public site — never display them.
 
 ## Identity
 - Name: Aditya Selvam
 - Positioning: Software engineer · M.S. Computer Science at the University of Chicago
 - Email: adiselvam@uchicago.edu
+- LinkedIn: https://www.linkedin.com/in/aditya-selvam
+- GitHub: https://github.com/Ka1eidosc0pe
+- Cities lived in (5): Mumbai, Singapore, Boston, Houston, Chicago
 - Interests that hint at range: AI, mobile, full-stack, cybersecurity
 
 ## Education
-- **The University of Chicago** — M.S. Computer Science · Sep 2025 – May 2027 · GPA 3.76/4.00
+- **The University of Chicago** — M.S. Computer Science · Sep 2025 – May 2027
 - **Nanyang Technological University, Singapore** — B.Eng. Computer Science (Honors) · Aug 2020 – Jul 2025 · Elective focus in AI and Cybersecurity
 
 ## Experience
