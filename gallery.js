@@ -24,7 +24,7 @@ const VERSIONS = [
   { id: 'v22', title: 'Open to work', note: 'A status pill above the greeting reads Open to SWE roles · Chicago, with a softly pulsing green dot, and clicking it opens an email. In the animated style it becomes a tilted comic caption sticker.' },
   { id: 'v23', title: 'Back to top', note: 'A back-to-top button fades in after you scroll, with a ring that fills as you read down the page. In the animated style it pops in as a comic UP! starburst.' },
   { id: 'v24', title: 'Ink-drawn underlines', note: 'Nav and text links get underlines that draw in on hover. In the Apple style it is a hairline sweeping in from the left. In the animated style it is a rough gold brush stroke painted on in steps, which also marks the section you are in.' },
-  { id: 'v25', title: 'Favicon and a wink', note: 'A custom AS monogram favicon set against a Firewatch-style sunset ridge gives the page its own identity in the tab. Switch away and the tab title calls out Don’t be a stranger. 👋 until you return.' },
+  { id: 'v25', title: 'Style switch, favicon and a wink', note: 'Apple is now the default style, and a paintbrush button in the nav (or the S key) crossfades into the animated style and back. Also a sunset AS monogram favicon, and the tab title calls out Don\u2019t be a stranger. \uD83D\uDC4B while you are away.' },
 ];
 
 (function () {
@@ -56,6 +56,21 @@ const VERSIONS = [
   }
 
   function label(id) { return id.toUpperCase(); }
+
+  // Previews only need their first frame. Once settled, stop each page's
+  // animations, rAF loops and timers so 25 live pages don't bog down scrolling.
+  // (Same-origin only; on file:// the try/catch simply leaves it running.)
+  function freeze(iframe) {
+    try {
+      var w = iframe.contentWindow, d = w.document;
+      var st = d.createElement('style');
+      st.textContent = '*,*::before,*::after{animation-play-state:paused!important;transition:none!important}';
+      d.head.appendChild(st);
+      w.requestAnimationFrame = function () { return 0; };
+      var last = w.setTimeout(function () {}, 0);
+      for (var id = 0; id <= last; id++) { w.clearTimeout(id); w.clearInterval(id); }
+    } catch (e) {}
+  }
 
   function sorted() {
     var list = VERSIONS.slice().sort(function (a, b) {
@@ -89,7 +104,10 @@ const VERSIONS = [
     iframe.setAttribute('aria-hidden', 'true');
     iframe.setAttribute('scrolling', 'no');
     iframe.style.pointerEvents = 'none';
-    iframe.addEventListener('load', function () { frame.classList.add('loaded'); });
+    iframe.addEventListener('load', function () {
+      frame.classList.add('loaded');
+      setTimeout(function () { freeze(iframe); }, 1800);
+    });
     zoom.appendChild(iframe);
     frame.appendChild(zoom);
 

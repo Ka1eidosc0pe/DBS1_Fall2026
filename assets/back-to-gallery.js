@@ -1,8 +1,21 @@
 // Injects a fixed "back to gallery" pill on every version page.
 // Usage: <script src="../../assets/back-to-gallery.js" defer></script>
 (function () {
-  // Hidden when rendered as a gallery thumbnail.
-  if (window.self !== window.top) return;
+  // As a gallery thumbnail: no pill, and freeze the page once its first frame
+  // has rendered so 25 live previews don't keep animating in the background.
+  if (window.self !== window.top) {
+    var freeze = function () {
+      var s = document.createElement('style');
+      s.textContent = '*,*::before,*::after{animation-play-state:paused!important;transition:none!important}';
+      document.head.appendChild(s);
+      window.requestAnimationFrame = function () { return 0; };
+      var last = setTimeout(function () {}, 0);
+      for (var id = 0; id <= last; id++) { clearTimeout(id); clearInterval(id); }
+    };
+    var settle = function () { setTimeout(freeze, 1800); };
+    if (document.readyState === 'complete') settle(); else window.addEventListener('load', settle);
+    return;
+  }
 
   var style = document.createElement('style');
   style.textContent =
