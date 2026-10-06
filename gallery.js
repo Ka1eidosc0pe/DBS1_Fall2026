@@ -6,6 +6,7 @@ const VERSIONS = [
   { id: 'v04', title: 'Skylines and a long-haul joke', note: 'Each city card gets a translucent landmark silhouette: Sea Link, Marina Bay Sands, Boston steeples, a Houston rocket, Willis Tower and the Bean. Fixed the route turning blue ahead of the plane. Added a wink on the long Singapore to Boston leg. Cleaner cards with the sun and moon in a fixed spot.' },
   { id: 'v05', title: 'Phoenix and lion', note: 'Education cards get original animated emblems. UChicago has a phoenix rising from flickering flames; on hover the flames flare, embers drift up and the wings beat. NTU has a regal lion whose mane blooms in, and it roars on first view and on every hover.' },
   { id: 'v06', title: 'School-colored cards', note: 'The education cards are now full maroon (UChicago) and navy (NTU), with the phoenix and lion as large background illustrations that stay clear of the text. The animations are unchanged. Also fixed the "g" in "Together." being clipped at the bottom.' },
+  { id: 'v07', title: 'Pouch and pebbles', note: 'The skills list becomes a tactile toolkit: a stitched canvas pouch with four labelled pockets. Tap one and its skill pebbles tip into a tray, bouncing and settling with real physics. Pebbles can be dragged and tossed, and the fluent languages are bigger stones.' },
 ];
 
 (function () {
