@@ -31,9 +31,6 @@ const VERSIONS = [
   'use strict';
 
   var TOTAL = 25;
-  var VIEW_W = 1440;
-  var VIEW_H = 900;
-
   var grid = document.getElementById('grid');
   var empty = document.getElementById('empty');
   var countEl = document.getElementById('count');
@@ -43,34 +40,7 @@ const VERSIONS = [
 
   var order = 'asc';
 
-  // One observer for all frames; scale each iframe to its frame's width.
-  var ro = 'ResizeObserver' in window
-    ? new ResizeObserver(function (entries) {
-        entries.forEach(function (e) { applyScale(e.target, e.contentRect.width); });
-      })
-    : null;
-
-  function applyScale(frame, width) {
-    var iframe = frame.querySelector('iframe');
-    if (iframe && width) iframe.style.transform = 'scale(' + (width / VIEW_W) + ')';
-  }
-
   function label(id) { return id.toUpperCase(); }
-
-  // Previews only need their first frame. Once settled, stop each page's
-  // animations, rAF loops and timers so 25 live pages don't bog down scrolling.
-  // (Same-origin only; on file:// the try/catch simply leaves it running.)
-  function freeze(iframe) {
-    try {
-      var w = iframe.contentWindow, d = w.document;
-      var st = d.createElement('style');
-      st.textContent = '*,*::before,*::after{animation-play-state:paused!important;transition:none!important}';
-      d.head.appendChild(st);
-      w.requestAnimationFrame = function () { return 0; };
-      var last = w.setTimeout(function () {}, 0);
-      for (var id = 0; id <= last; id++) { w.clearTimeout(id); w.clearInterval(id); }
-    } catch (e) {}
-  }
 
   function sorted() {
     var list = VERSIONS.slice().sort(function (a, b) {
@@ -96,19 +66,16 @@ const VERSIONS = [
     frame.appendChild(el('div', 'skeleton'));
     var zoom = el('div', 'zoom');
 
-    var iframe = document.createElement('iframe');
-    iframe.src = 'versions/' + v.id + '/index.html';
-    iframe.title = 'Preview of ' + label(v.id) + ': ' + v.title;
-    iframe.loading = 'lazy';
-    iframe.tabIndex = -1;
-    iframe.setAttribute('aria-hidden', 'true');
-    iframe.setAttribute('scrolling', 'no');
-    iframe.style.pointerEvents = 'none';
-    iframe.addEventListener('load', function () {
-      frame.classList.add('loaded');
-      setTimeout(function () { freeze(iframe); }, 1800);
-    });
-    zoom.appendChild(iframe);
+    // Static screenshots (thumbs/vNN.jpg, captured at 1440x900) instead of live
+    // iframes: 25 running pages, the illustrated ones especially, made scrolling stutter.
+    var img = document.createElement('img');
+    img.src = 'thumbs/' + v.id + '.jpg';
+    img.alt = '';
+    img.width = 960; img.height = 600;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.addEventListener('load', function () { frame.classList.add('loaded'); });
+    zoom.appendChild(img);
     frame.appendChild(zoom);
 
     var meta = el('div', 'meta');
@@ -120,13 +87,10 @@ const VERSIONS = [
     a.appendChild(meta);
     li.appendChild(a);
 
-    if (ro) ro.observe(frame);
-    else applyScale(frame, frame.clientWidth);
     return li;
   }
 
   function render() {
-    if (ro) ro.disconnect();
     grid.textContent = '';
 
     var hasItems = VERSIONS.length > 0;
