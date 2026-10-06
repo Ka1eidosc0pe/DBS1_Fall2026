@@ -17,6 +17,7 @@ const VERSIONS = [
   { id: 'v15', title: 'Micro-interactions', note: 'Magnetic CTAs, 3D tilt with a glare highlight on cards, a subtle cursor spotlight in dark mode, a scroll-progress bar and a section-aware nav.' },
   { id: 'v16', title: 'Polaroid hobby wall', note: 'Beyond work becomes six illustrated polaroids scattered like photos on a table. Drag them around, double-click to flip one over, or tidy them into a grid.' },
   { id: 'v17', title: 'Multilingual hello', note: 'A greeting above the name morphs through the five languages Aditya speaks: Hello, नमस्ते, 你好, Hola, Bonjour. Hover pauses it and a click advances it.' },
+  { id: 'v18', title: 'Keepy-uppy easter egg', note: 'Enter the Konami code, pick Play keepy-uppy in the command palette, or toss a pebble up three times to juggle a football. It has kick physics, spin, olé pops and confetti.' },
 ];
 
 (function () {
