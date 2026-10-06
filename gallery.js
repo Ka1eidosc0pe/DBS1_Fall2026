@@ -15,6 +15,7 @@ const VERSIONS = [
   { id: 'v13', title: 'DoF.me data flow', note: 'An animated architecture diagram in the DoF.me section: data packets travel from the provider layer through normalization to canonical records and persistence, then branch into the AI narrative and gameplay. Hover a node for details.' },
   { id: 'v14', title: '30-second view', note: 'A one-screen résumé overlay for busy recruiters, opened from the hero or the command palette. The same content prints as a clean one-page US Letter résumé via Download PDF or Cmd+P.' },
   { id: 'v15', title: 'Micro-interactions', note: 'Magnetic CTAs, 3D tilt with a glare highlight on cards, a subtle cursor spotlight in dark mode, a scroll-progress bar and a section-aware nav.' },
+  { id: 'v16', title: 'Polaroid hobby wall', note: 'Beyond work becomes six illustrated polaroids scattered like photos on a table. Drag them around, double-click to flip one over, or tidy them into a grid.' },
 ];
 
 (function () {
