@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aditya Selvam — Landing Page Iterations</title>
+  <meta name="description" content="25 explorations of a personal landing page for Aditya Selvam, a software engineer. Browse live previews of each version and what changed.">
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+  <a class="skip" href="#gallery">Skip to gallery</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div>
+        <p class="eyebrow">Design · Build · Ship</p>
+        <h1>Aditya Selvam — Landing Page Iterations</h1>
+        <p class="lede">25 explorations of a personal landing page. Each card notes what changed.</p>
+      </div>
+      <div class="controls">
+        <p class="count" id="count" aria-live="polite">&nbsp;</p>
+        <div class="toggle" role="group" aria-label="Sort order">
+          <button type="button" id="sort-asc" aria-pressed="true">Oldest</button>
+          <button type="button" id="sort-desc" aria-pressed="false">Newest</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <section id="gallery" aria-label="Versions">
+      <ol class="grid" id="grid"></ol>
+      <div class="empty" id="empty" hidden>
+        <p class="empty-title">No versions yet</p>
+        <p>Add an entry to the <code>VERSIONS</code> array in <code>gallery.js</code> and it will show up here.</p>
+      </div>
+      <noscript>
+        <p class="noscript">Live previews need JavaScript. You can still open the first version directly:
+          <a href="versions/v01/index.html">V01 — Apple-inspired foundation</a>.</p>
+      </noscript>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap"><p>Built with HTML, CSS &amp; JavaScript.</p></div>
+  </footer>
+
+  <script src="gallery.js" defer></script>
+</body>
+</html>
