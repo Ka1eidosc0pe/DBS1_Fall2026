@@ -13,6 +13,7 @@ const VERSIONS = [
   { id: 'v11', title: 'Pinned experience story', note: 'Allthenticate becomes an Apple-style pinned scroll story. The three highlights light up in turn beside animated diagrams for the testing framework, BLE device onboarding and the UI/UX overhaul.' },
   { id: 'v12', title: 'Case-study sheets', note: 'Each project tile now grows into a case-study sheet with an animated header illustration, what it does, how it was built and the stack, with prev/next arrows. Projects are searchable in the command palette too.' },
   { id: 'v13', title: 'DoF.me data flow', note: 'An animated architecture diagram in the DoF.me section: data packets travel from the provider layer through normalization to canonical records and persistence, then branch into the AI narrative and gameplay. Hover a node for details.' },
+  { id: 'v14', title: '30-second view', note: 'A one-screen résumé overlay for busy recruiters, opened from the hero or the command palette. The same content prints as a clean one-page US Letter résumé via Download PDF or Cmd+P.' },
 ];
 
 (function () {
