@@ -22,3 +22,4 @@ Import the repo into Vercel as a static site (Framework preset: **Other**, no bu
 ## Adding a version
 1. Create `versions/vNN/index.html` and include `<script src="../../assets/back-to-gallery.js" defer></script>`.
 2. Add an entry to the `VERSIONS` array in `gallery.js`.
+3. Bump the `?v=` cache-buster on the `gallery.js`/`gallery.css` links in `index.html` so browsers don't show a stale list.
