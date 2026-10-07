@@ -1747,7 +1747,8 @@ html[data-style="animated"] .specs::before{background:var(--bg)}
   @keyframes hexPulse{from{filter:none}to{filter:drop-shadow(0 0 14px rgba(77,225,255,.7))}}
   html[data-style="animated"] .sky .blink{animation:blink 2.6s steps(1,end) infinite}
   html[data-style="animated"] h2.reveal,html[data-style="animated"] .kicker.reveal{transition-timing-function:steps(5,end)}
-  html[data-style="animated"] h1:hover .grad{animation:glitch .4s steps(2) 1}
+  /* Keep pop6 in the list on hover: replacing it with glitch alone restarted the intro (name vanished and re-popped) whenever the cursor left the h1 */
+  html[data-style="animated"] h1:hover .grad{animation:pop6 .75s steps(6) .1s both,glitch .4s steps(2) 1}
   html[data-style="animated"] h2:hover,html[data-style="animated"] .nav-name:hover,html[data-style="animated"] .story-head h3:hover,html[data-style="animated"] .mid:hover,html[data-style="animated"] .cs-title:hover{animation:glitch2 .36s steps(2) 1}
   @keyframes glitch{0%{translate:0 0}25%{translate:5px -2px;text-shadow:.1em .02em 0 var(--mis-r),-.1em -.02em 0 var(--mis-c)}50%{translate:-5px 2px;text-shadow:-.09em -.02em 0 var(--mis-r),.09em .03em 0 var(--mis-c)}75%{translate:3px 0}100%{translate:0 0}}
   @keyframes glitch2{0%{translate:0 0}25%{translate:4px -1px;text-shadow:-6px 1px 0 var(--mis-r),6px -1px 0 var(--mis-c)}50%{translate:-4px 1px;text-shadow:5px 0 0 var(--mis-r),-5px 0 0 var(--mis-c)}75%{translate:2px 0}100%{translate:0 0}}
