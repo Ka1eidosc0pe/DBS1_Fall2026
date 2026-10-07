@@ -2680,7 +2680,9 @@
       if (t >= PAINT) {
         var f = clamp((t - PAINT) / FLICK, 0, 1), fe = f * f;
         endPos = endPos || { x: x, y: y, d: st.d };
-        tx = fe * 320; ty = fe * 380; extraRot = fe * 55; op = 1 - clamp((f - .7) / .3, 0, 1);
+        // Flick onward in the final stroke's direction (the last stroke runs right to left), so the
+        // brush leaves past the edge it is already crossing instead of doubling back onto the screen
+        tx = endPos.d * fe * 380; ty = fe * 170; extraRot = fe * 40; op = 1 - clamp((f - .55) / .45, 0, 1);
       }
       wrap.style.opacity = op;
       wrap.style.transform = 'translate(' + (x + tx) + 'px,' + (y + bob + ty) + 'px) scaleX(' + st.d + ') rotate(' + (rot + extraRot) + 'deg)';
