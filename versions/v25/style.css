@@ -1820,3 +1820,26 @@ html[data-style="animated"] .style-btn .sb-brush{opacity:0;transform:scale(.6) r
 html[data-style="animated"] .style-btn .sb-glass{opacity:1;transform:none}
 html[data-style="animated"] .style-btn:hover{background:color-mix(in srgb,var(--hx-gold) 35%,transparent)}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
+
+/* ---- v25: style-transition overlays (brush paint-in, squeegee wipe, polish shine) ---- */
+.style-fx{position:fixed;inset:0;z-index:10000;pointer-events:none;overflow:hidden;view-transition-name:style-fx}
+::view-transition-group(style-fx),::view-transition-old(style-fx),::view-transition-new(style-fx){animation:none}
+.style-fx>*{position:absolute;will-change:transform,opacity}
+.sfx-cover{inset:0;background:linear-gradient(120deg,#ff2e93,#ff8a2b 55%,#ffb02e)}
+.sfx-brush{left:-260px;top:-36px;width:260px;height:72px;transform-origin:260px 36px;opacity:0;filter:drop-shadow(0 8px 8px rgba(0,0,0,.35))}
+.sfx-brush svg{display:block}
+.sfx-drop{border-radius:50%;transform:scale(0)}
+.sfx-move{left:0;top:0;width:0;height:100%}
+.sfx-blade{left:-26px;top:0;width:26px;height:100%;overflow:visible;
+  background:linear-gradient(90deg,rgba(255,255,255,.6),rgba(150,190,215,.3) 45%,rgba(255,255,255,.4));
+  -webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3);
+  box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 0 2px rgba(0,0,0,.16),0 0 26px rgba(0,0,0,.28),inset 0 0 8px rgba(255,255,255,.5)}
+.sfx-rubber{position:absolute;right:-1px;top:0;width:6px;height:100%;background:linear-gradient(90deg,#3a3a42,#17171b);box-shadow:0 0 6px rgba(0,0,0,.5)}
+.sfx-glint{position:absolute;left:7px;top:0;width:2px;height:28%;border-radius:2px;background:linear-gradient(180deg,transparent,#fff 30%,#fff 70%,transparent);box-shadow:0 0 8px 1px rgba(255,255,255,.85)}
+.sfx-handle{position:absolute;left:-38px;top:50%;width:40px;height:64px;margin-top:-32px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.4))}
+.sfx-smear{left:0;top:0;width:84px;height:100%;transform-origin:0 50%}
+.sfx-smear-in{position:absolute;inset:-20px -10px;filter:blur(14px);
+  background:linear-gradient(180deg,#ff2e93 0,#ff8a2b 22%,#19c6b7 40%,#ff2e93 58%,#ffb02e 76%,#19c6b7 90%,#ff2e93);
+  -webkit-mask-image:linear-gradient(90deg,#000,transparent);mask-image:linear-gradient(90deg,#000,transparent)}
+.style-shine{position:fixed;left:-50%;top:-50%;width:200%;height:200%;z-index:10000;pointer-events:none;opacity:0;
+  background:linear-gradient(135deg,transparent 42%,rgba(255,255,255,.25) 50%,transparent 58%)}

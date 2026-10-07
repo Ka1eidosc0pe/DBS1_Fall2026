@@ -28,7 +28,7 @@
     var metaScheme = document.querySelector('meta[name="color-scheme"]');
     var COLORS = { dark: '#000000', light: '#ffffff' };
     var DUR = 1000, EASE = 'cubic-bezier(.7,0,.3,1)';
-    var busy = false;
+    var busy = window.__fxBusy = false;
 
     function current() { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
     function applyTheme(t) {
@@ -114,13 +114,13 @@
       return Promise.all(anims.map(function (a) { return a.finished; }));
     }
 
-    function endFx() { fx.classList.remove('on'); fx.innerHTML = ''; busy = false; }
+    function endFx() { fx.classList.remove('on'); fx.innerHTML = ''; busy = window.__fxBusy = false; }
 
     function switchTheme() {
-      if (busy) return;
+      if (busy || window.__fxBusy) return;
       var next = current() === 'dark' ? 'light' : 'dark';
       if (reduce) { applyTheme(next); return; }
-      busy = true;
+      busy = window.__fxBusy = true;
       var r = btn.getBoundingClientRect();
       var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
       var vw = window.innerWidth, vh = window.innerHeight;
@@ -135,7 +135,7 @@
             // overlay joins the NEW state only, under its own view-transition-name, so it is never duplicated in the root snapshot
             fx.classList.add('on');
           });
-        } catch (e) { applyTheme(next); busy = false; return; }
+        } catch (e) { applyTheme(next); busy = window.__fxBusy = false; return; }
         vt.ready.then(function () {
           playFx(next, cx, cy, R, null).then(endFx, endFx);
           root.animate({ clipPath: [circle(0), circle(R)] },
@@ -2537,12 +2537,19 @@
   });
 })();
 
-/* ---- v25: Apple <-> Animated style toggle (Apple is the default) ---- */
+/* ---- v25: Apple <-> Animated style toggle (Apple is the default) ----
+   Apple -> Animated: a paintbrush paints the new page in with 4 serpentine strokes (clip-path polygon reveal).
+   Animated -> Apple: a glass squeegee wipes the paint away, then a quick polish shine.
+   Shares window.__fxBusy with the theme transition so the two never overlap. */
 (function () {
   var btn = document.getElementById('styleBtn');
   if (!btn || !window.siteStyle) return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var busy = false;
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var PAINT = 1300, FLICK = 300, PAUSE = 30, BANDS = 4, NPT = 24, NLEAD = 8;
+  var SQ_DUR = 900, SQ_EASE = 'cubic-bezier(.65,0,.35,1)', BLADE = 26;
+  var COLORS = ['#ff2e93', '#ff8a2b', '#ffb02e', '#19c6b7', '#e0226f'];
+
   function label() {
     var animated = window.siteStyle.get() === 'animated';
     var text = animated ? 'Switch to Apple style' : 'Switch to animated style';
@@ -2555,20 +2562,271 @@
     // Layout-dependent modules (journey route, tray bounds, polaroids, pinned stages) re-measure on resize
     window.dispatchEvent(new Event('resize'));
   }
-  function toggle() {
-    if (busy) return;
-    var next = window.siteStyle.get() === 'animated' ? 'apple' : 'animated';
-    if (document.startViewTransition && !reduce.matches) {
-      busy = true;
-      var t = document.startViewTransition(function () { apply(next); });
-      t.finished.finally(function () { busy = false; });
-    } else apply(next);
+
+  /* ---------- helpers ---------- */
+  function el(tag, cls, parent) { var n = document.createElement(tag); if (cls) n.className = cls; if (parent) parent.appendChild(n); return n; }
+  function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+  function hash(a, b) { var h = (a * 374761393 + b * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967295 * 2 - 1; }
+  function vnoise(key, x, sp) {
+    var f = x / sp, i = Math.floor(f), t = f - i; t = t * t * (3 - 2 * t);
+    return hash(key, i) * (1 - t) + hash(key, i + 1) * t;
   }
+  function jit(key, x) { return 12 * (0.75 * vnoise(key, x, 38) + 0.25 * vnoise(key + 91, x, 13)); }
+  function smooth(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
+
+  var BRUSH_SVG =
+    '<svg viewBox="0 0 260 72" width="260" height="72" aria-hidden="true" focusable="false">' +
+    '<defs>' +
+    '<linearGradient id="sfxWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9b073"/><stop offset=".55" stop-color="#b9763a"/><stop offset="1" stop-color="#7a4620"/></linearGradient>' +
+    '<linearGradient id="sfxMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".45" stop-color="#9aa3ad"/><stop offset=".6" stop-color="#d8dde2"/><stop offset="1" stop-color="#6b737c"/></linearGradient>' +
+    '<linearGradient id="sfxPaint" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffb02e"/><stop offset=".45" stop-color="#ff8a2b"/><stop offset="1" stop-color="#ff2e93"/></linearGradient>' +
+    '</defs>' +
+    '<path d="M2 30 Q2 24 10 25 L126 29 L126 43 L10 47 Q2 48 2 42 Z" fill="url(#sfxWood)"/>' +
+    '<path d="M14 31 L120 33" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-linecap="round" fill="none"/>' +
+    '<circle cx="14" cy="36" r="3" fill="#5a3216"/>' +
+    '<path d="M124 27 L176 22 L176 50 L124 45 Z" fill="url(#sfxMetal)"/>' +
+    '<path d="M138 26 L138 46 M150 25 L150 47 M162 23.5 L162 48.5" stroke="#4d555d" stroke-opacity=".55" stroke-width="1.4"/>' +
+    '<path d="M174 21 C206 12 238 20 256 33 Q262 36 256 39 C238 52 206 60 174 51 Z" fill="url(#sfxPaint)"/>' +
+    '<path d="M184 26 C208 20 232 26 250 34 M184 46 C208 52 232 46 250 38" stroke="#fff" stroke-opacity=".35" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+    '<path d="M196 30 C214 28 232 33 248 36" stroke="#e0226f" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '</svg>';
+  var HANDLE_SVG =
+    '<svg viewBox="0 0 40 64" width="40" height="64" aria-hidden="true" focusable="false">' +
+    '<rect x="14" y="20" width="26" height="24" rx="3" fill="#2a2a30"/>' +
+    '<path d="M16 6 H6 Q2 6 2 10 V54 Q2 58 6 58 H16 Q20 58 20 54 V46 H14 V18 H20 V10 Q20 6 16 6 Z" fill="#3a3a42"/>' +
+    '<path d="M5 12 V52" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>' +
+    '</svg>';
+
+  /* ---------- paintbrush geometry ---------- */
+  function strokeGeom(W, H) {
+    var bh = H / BANDS, ov = bh * 0.12;
+    var bot = [];
+    for (var k = 0; k < BANDS; k++) bot.push(k === BANDS - 1 ? H + 30 : (k + 1) * bh + ov / 2);
+    return { W: W, H: H, bh: bh, bot: bot, Ts: (PAINT - PAUSE * (BANDS - 1)) / BANDS };
+  }
+  // state at time t (ms): band k, direction d, raw head x (may overshoot the viewport), travel
+  function stateAt(g, t) {
+    var per = g.Ts + PAUSE, k = Math.min(BANDS - 1, Math.floor(clamp(t, 0, PAINT) / per));
+    var u = clamp((clamp(t, 0, PAINT) - k * per) / g.Ts, 0, 1);
+    var e = 0.6 * u + 0.4 * smooth(u), d = k % 2 === 0 ? 1 : -1;
+    var m = 44, raw = -m + e * (g.W + 2 * m);
+    return { k: k, d: d, u: u, x: d > 0 ? raw : g.W - raw, travel: raw + m };
+  }
+  function bandY(g, k) { var a = k === 0 ? -30 : g.bot[k - 1]; return (a + g.bot[k]) / 2; }
+  // one constant-vertex-count polygon: block of finished bands + current band painted up to the head
+  function polygon(g, k, d, xHead, travel) {
+    var W = g.W, X0 = -30, X1 = W + 30, step = (X1 - X0) / (NPT - 1);
+    var mir = function (x) { return d > 0 ? x : W - x; };
+    var xm = clamp(d > 0 ? xHead : W - xHead, 0, W);
+    var yPrev = function (x) { return k === 0 ? -30 : g.bot[k - 1] + jit(k - 1, x); };
+    var yCur = function (x) { return g.bot[k] + jit(k, x); };
+    var bulge = 20 * smooth(travel / 90), pts = [], j, x, y;
+    function add(mx, y) { pts.push(Math.round(mir(mx) * 10) / 10 + 'px ' + Math.round(y * 10) / 10 + 'px'); }
+    for (j = 0; j < NPT; j++) add(X0 + j * step, -30);
+    add(X1, k === 0 ? -30 : g.bot[k - 1] + jit(k - 1, mir(X1)));
+    for (j = NPT - 1; j >= 0; j--) { x = Math.max(X0 + j * step, xm); add(x, k === 0 ? -30 : yPrev(mir(x))); }
+    var y0 = k === 0 ? -30 : yPrev(mir(xm)), y1 = yCur(mir(xm));
+    for (j = 0; j < NLEAD; j++) { var t = j / (NLEAD - 1); add(xm + bulge * Math.sin(Math.PI * t), y0 + (y1 - y0) * t); }
+    for (j = NPT - 1; j >= 0; j--) { x = Math.min(X0 + j * step, xm); add(x, yCur(mir(x))); }
+    return 'polygon(' + pts.join(',') + ')';
+  }
+  function paintKeyframes(g) {
+    var D = PAINT + FLICK, kf = [], per = g.Ts + PAUSE, N = 12;
+    function push(t, k, d, x, tr) { kf.push({ clipPath: polygon(g, k, d, x, tr), offset: t / D }); }
+    for (var k = 0; k < BANDS; k++) {
+      var s = k * per;
+      if (k > 0) { var p0 = stateAt(g, s); push(s - PAUSE, k, p0.d, p0.x, 0); }
+      for (var i = 0; i < N; i++) {
+        var t = s + g.Ts * i / (N - 1), st = stateAt(g, t - (i === N - 1 ? 0.001 : 0));
+        if (i === N - 1) st = stateAt(g, s + g.Ts);
+        push(t, k, st.d, st.x, st.travel);
+      }
+    }
+    var last = kf[kf.length - 1];
+    kf.push({ clipPath: last.clipPath, offset: 1 });
+    return kf;
+  }
+
+  /* ---------- paint transition ---------- */
+  function buildBrushLayer(layer) {
+    var wrap = el('div', 'sfx-brush', layer);
+    wrap.innerHTML = BRUSH_SVG;
+    return wrap;
+  }
+  function splatter(layer, x, y, d) {
+    var n = 4 + Math.floor(Math.random() * 4);
+    for (var i = 0; i < n; i++) {
+      var s = el('div', 'sfx-drop', layer), sz = 8 + Math.random() * 16;
+      s.style.width = s.style.height = sz + 'px';
+      s.style.left = (x + d * (6 + Math.random() * 46) - sz / 2) + 'px';
+      s.style.top = (y + (Math.random() - .5) * 90 - sz / 2) + 'px';
+      s.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
+      if (Math.random() < .5) s.style.borderRadius = (45 + Math.random() * 10) + '% ' + (55 - Math.random() * 10) + '% ' + (50 + Math.random() * 10) + '% ' + (50 - Math.random() * 10) + '%';
+      s.animate([
+        { transform: 'scale(0)', opacity: 1, easing: 'steps(3)' },
+        { transform: 'scale(1)', opacity: 1, offset: .3 },
+        { transform: 'scale(1)', opacity: 0 }
+      ], { duration: 600, fill: 'both' });
+    }
+  }
+  // drives the brush overlay from a time source; resolves when the flick is done
+  function driveBrush(layer, g, timeFn, done) {
+    var wrap = buildBrushLayer(layer), lastK = 0, spawned = {}, alive = true, endPos = null;
+    function frame() {
+      if (!alive) return;
+      var t = timeFn(), st = stateAt(g, t), y = bandY(g, st.k);
+      var bob = Math.sin(t / 38) * 3, rot = 20 + Math.sin(t / 55) * 2.5, x = st.x, op = clamp(t / 60, 0, 1), tx = 0, ty = 0, extraRot = 0;
+      if (st.u >= 1 && !spawned[st.k] && t >= 0) { spawned[st.k] = 1; splatter(layer, clamp(x, 20, g.W - 20), y, st.d); }
+      if (t >= PAINT) {
+        var f = clamp((t - PAINT) / FLICK, 0, 1), fe = f * f;
+        endPos = endPos || { x: x, y: y, d: st.d };
+        tx = fe * 320; ty = fe * 380; extraRot = fe * 55; op = 1 - clamp((f - .7) / .3, 0, 1);
+      }
+      wrap.style.opacity = op;
+      wrap.style.transform = 'translate(' + (x + tx) + 'px,' + (y + bob + ty) + 'px) scaleX(' + st.d + ') rotate(' + (rot + extraRot) + 'deg)';
+      if (t >= PAINT + FLICK) { alive = false; done && done(); return; }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+    return function stop() { alive = false; };
+  }
+
+  function makeLayer() {
+    var layer = el('div', 'style-fx');
+    layer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(layer);
+    return layer;
+  }
+
+  function paintTransition(next, finish) {
+    var W = window.innerWidth, H = window.innerHeight, g = strokeGeom(W, H), D = PAINT + FLICK;
+    var layer, stop = function () {};
+    function cleanup() { stop(); if (layer && layer.parentNode) layer.parentNode.removeChild(layer); layer = null; finish(); }
+    if (typeof document.startViewTransition === 'function') {
+      var vt, clipAnim;
+      try {
+        vt = document.startViewTransition(function () { apply(next); layer = makeLayer(); });
+      } catch (e) { apply(next); finish(); return; }
+      vt.ready.then(function () {
+        clipAnim = document.documentElement.animate(paintKeyframes(g),
+          { duration: D, easing: 'linear', fill: 'forwards', pseudoElement: '::view-transition-new(root)' });
+        if (layer) stop = driveBrush(layer, g, function () { return clipAnim.currentTime || 0; });
+      }).catch(function () {});
+      vt.finished.then(cleanup, cleanup);
+    } else {
+      // Fallback: paint a gradient cover with the same brush-stroke polygon, swap the style at the midpoint, fade out
+      layer = makeLayer();
+      var cover = el('div', 'sfx-cover', layer);
+      layer.insertBefore(cover, layer.firstChild);
+      var anim = cover.animate(paintKeyframes(g), { duration: D, easing: 'linear', fill: 'both' });
+      var applied = false, t0 = performance.now();
+      stop = driveBrush(layer, g, function () {
+        var t = performance.now() - t0;
+        if (!applied && t >= PAINT) { applied = true; apply(next); }
+        return t;
+      }, function () {
+        if (!applied) apply(next);
+        var fade = layer.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: 'both' });
+        fade.finished.then(cleanup, cleanup);
+      });
+      anim.finished.catch(function () {});
+    }
+  }
+
+  /* ---------- squeegee transition ---------- */
+  function buildSqueegee(layer) {
+    var move = el('div', 'sfx-move', layer);
+    var smear = el('div', 'sfx-smear', move);
+    el('div', 'sfx-smear-in', smear);
+    var blade = el('div', 'sfx-blade', move);
+    el('div', 'sfx-rubber', blade);
+    var glint = el('div', 'sfx-glint', blade);
+    var handle = el('div', 'sfx-handle', blade);
+    handle.innerHTML = HANDLE_SVG;
+    return { move: move, smear: smear, glint: glint };
+  }
+  function runSqueegee(layer, W) {
+    var q = buildSqueegee(layer), o = { duration: SQ_DUR, easing: SQ_EASE, fill: 'both' };
+    var a = q.move.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(' + (W + BLADE) + 'px)' }], o);
+    q.smear.animate([
+      { transform: 'scaleX(.7)', opacity: .95 },
+      { transform: 'scaleX(1.2)', opacity: .9, offset: .5 },
+      { transform: 'scaleX(1.9)', opacity: 0 }
+    ], { duration: SQ_DUR, easing: 'linear', fill: 'both' });
+    q.glint.animate([{ transform: 'translateY(-110%)' }, { transform: 'translateY(380%)' }], { duration: SQ_DUR, easing: 'ease-in-out', fill: 'both' });
+    return a;
+  }
+  function shine(done) {
+    var s = el('div', 'style-shine');
+    s.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(s);
+    var a = s.animate([
+      { transform: 'translate(-70%,-70%)', opacity: 0 },
+      { opacity: 1, offset: .2 }, { opacity: 1, offset: .8 },
+      { transform: 'translate(70%,70%)', opacity: 0 }
+    ], { duration: 500, easing: 'ease-in-out', fill: 'both' });
+    var fin = function () { if (s.parentNode) s.parentNode.removeChild(s); done(); };
+    a.finished.then(fin, fin);
+  }
+  function wipeTransition(next, finish) {
+    var W = window.innerWidth, layer, ended = false;
+    function cleanup() {
+      if (ended) return; ended = true;
+      if (layer && layer.parentNode) layer.parentNode.removeChild(layer);
+      layer = null;
+      shine(finish);
+    }
+    if (typeof document.startViewTransition === 'function') {
+      var vt;
+      try {
+        vt = document.startViewTransition(function () { apply(next); layer = makeLayer(); });
+      } catch (e) { apply(next); finish(); return; }
+      vt.ready.then(function () {
+        document.documentElement.animate(
+          { clipPath: ['inset(0px ' + W + 'px 0px 0px)', 'inset(0px ' + (-BLADE) + 'px 0px 0px)'] },
+          { duration: SQ_DUR, easing: SQ_EASE, fill: 'forwards', pseudoElement: '::view-transition-new(root)' });
+        if (layer) runSqueegee(layer, W);
+      }).catch(function () {});
+      vt.finished.then(cleanup, cleanup);
+    } else {
+      layer = makeLayer();
+      var a = runSqueegee(layer, W);
+      setTimeout(function () { apply(next); }, SQ_DUR / 2);
+      a.finished.then(function () {
+        var f = layer.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: 'both' });
+        f.finished.then(cleanup, cleanup);
+      }, cleanup);
+    }
+  }
+
+  function quickSwap(next, finish) {
+    if (typeof document.startViewTransition !== 'function') { apply(next); finish(); return; }
+    var vt;
+    try { vt = document.startViewTransition(function () { apply(next); }); } catch (e) { apply(next); finish(); return; }
+    vt.ready.then(function () {
+      document.documentElement.animate({ opacity: [0, 1] }, { duration: 200, easing: 'linear', fill: 'both', pseudoElement: '::view-transition-new(root)' });
+    }).catch(function () {});
+    vt.finished.then(finish, finish);
+  }
+
+  function toggle() {
+    if (window.__fxBusy) return;
+    var next = window.siteStyle.get() === 'animated' ? 'apple' : 'animated';
+    window.__fxBusy = true;
+    var done = function () { window.__fxBusy = false; };
+    // safety net so a failed transition can never leave the page locked
+    var guard = setTimeout(done, 4000);
+    var finish = function () { clearTimeout(guard); done(); };
+    if (reduce.matches) quickSwap(next, finish);
+    else if (next === 'animated') paintTransition(next, finish);
+    else wipeTransition(next, finish);
+  }
+
   btn.addEventListener('click', toggle);
   document.addEventListener('stylechange', label);
   document.addEventListener('keydown', function (e) {
     if (e.key !== 's' && e.key !== 'S') return;
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
     var t = e.target;
     if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
     // Ignore while any dialog (palette, sheet, game, TL;DR) is actually showing
