@@ -2558,7 +2558,18 @@
     btn.title = text;
   }
   function apply(next) {
+    var before = new Set(document.getAnimations());
     window.siteStyle.set(next);
+    // The new style's one-off intro animations (hero entrances, pops, slides) are meant for page
+    // load. Some outlast the brush/squeegee, so they kept stepping in after the reveal and looked
+    // like a glitch. Jump every newly started finite CSS animation/transition to its end state so
+    // the transition reveals a settled page; looping ambient animations keep running.
+    getComputedStyle(document.documentElement).color; // flush styles so the new animations exist
+    document.getAnimations().forEach(function (a) {
+      if (before.has(a)) return;
+      if (!(window.CSSAnimation && a instanceof CSSAnimation) && !(window.CSSTransition && a instanceof CSSTransition)) return;
+      if (isFinite(a.effect.getComputedTiming().endTime)) a.finish();
+    });
     // Layout-dependent modules (journey route, tray bounds, polaroids, pinned stages) re-measure on resize
     window.dispatchEvent(new Event('resize'));
   }
